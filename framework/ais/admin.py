@@ -1,8 +1,6 @@
 from django.contrib import admin
-<<<<<<< HEAD
 
 # Register your models here.
-=======
 from django.contrib.auth.hashers import make_password  # For hashing passwords
 # Import your models
 from .models.teachers import Teachers
@@ -14,25 +12,24 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ('nip', 'name', 'email', 'phone_number')
 
     def save_model(self, request, obj, form, change):
-        # Save Teacher first
+        # Simpan Teacher terlebih dahulu
         super().save_model(request, obj, form, change)
 
-        # Check if the user with the teacher's email already exists
+        # Cek apakah user dengan email guru sudah ada
         user, created = Users.objects.get_or_create(
-            username=obj.nip,  # Assuming `nip` is a unique identifier
+            username=obj.nip,
             defaults={
-                'password': make_password('default_password'),  # Hashing the default password
-                'role': Users.TEACHER,  # Assuming role field exists
+                'password': make_password('default_password'),  # Menggunakan hashing password
+                'role': Users.TEACHER,  # Pastikan Anda memiliki field role di model Users
             }
         )
         if not created:
-            # If user exists, update the role (for safety)
+            # Jika user sudah ada, perbarui role (untuk berjaga-jaga)
             user.role = Users.TEACHER
             user.save()
 
 
-# Register the models at the module level
+# Daftarkan Teachers dengan custom TeacherAdmin
 admin.site.register(Teachers, TeacherAdmin)
 admin.site.register(Students)
 admin.site.register(Users)
->>>>>>> 2c709c3 (Review 4)
